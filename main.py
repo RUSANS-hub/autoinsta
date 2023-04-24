@@ -5,6 +5,7 @@ import time
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
+from instagrapi import Client
 
 # Mengecek Quotes
 def delete_similar_quotes(file_path):
@@ -132,6 +133,46 @@ img.save('images/hasil.jpg')
 print("Foto Berhasil Diedit!")
 
 time.sleep(2)
+
+# Mengupload Quotes
+# Baca file acc.txt dan ambil nilai username dan password
+with open("account/acc.txt", "r") as f:
+    lines = f.readlines()
+    username = lines[0].split(" = ")[1].strip().strip('"')
+    password = lines[1].split(" = ")[1].strip().strip('"')
+
+# Buat instance Client
+client = Client()
+
+# Login dengan username dan password
+client.login(username, password)
+
+# Masukkan caption dan path gambar yang akan diupload
+caption = '''
+            Dibuat otomatis oleh AI.
+            .
+            .
+            .
+            .
+            Tags:
+            #writer #writing #quotes #quotesindonesia #quotesislami
+            #quotesgalau #quote #quoteoftheday #quotestagram #quotesdaily
+            #senja #literasi30detik #literasi #literasi15detik #galau
+            #galauquotes #katakatabijak #katakatamotivasi #katakatacinta
+            #katabijak #katakata #katamutiara #katamotivasi #sajak #sajakcinta
+            #sajakrindu #sajakdetik #puisi #puisicinta
+            
+            '''
+image_path = "images/hasil.jpg"
+
+# Buka file gambar
+with open(image_path, "rb") as f:
+    # upload photo
+    client.photo_upload(str(image_path), caption=caption)
+    print("Upload Berhasil!")
+# Keluar dari akun
+client.logout()
+
 
 #Menghapus Quote
 with open('quotes/edit.txt', 'w') as f:
